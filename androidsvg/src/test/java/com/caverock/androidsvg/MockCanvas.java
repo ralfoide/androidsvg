@@ -23,11 +23,11 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
-
-import org.assertj.core.util.Strings;
 import org.robolectric.annotation.Implementation;
 import org.robolectric.annotation.Implements;
-import org.robolectric.shadow.api.Shadow;
+
+// RM -- Available starting with Robolectric 3.3
+// import org.robolectric.shadow.api.Shadow;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +50,6 @@ public class MockCanvas
    private Stack<Matrix>  matrixStack = new Stack<>();
 
    private ArrayList<String>  operations = new ArrayList<>();
-
 
    /**
     * Save flags

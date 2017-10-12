@@ -61,7 +61,7 @@ public class RenderTest
       svg.renderToCanvas(canvas);
 
       Matrix  afterMatrix = canvas.getMatrix();
-      assertEquals(beforeMatrix, afterMatrix);
+      assertEquals(beforeMatrix.toShortString(), afterMatrix.toShortString());
       assertEquals(true, beforeMatrix.isIdentity());
       assertEquals(true, afterMatrix.isIdentity());
 
