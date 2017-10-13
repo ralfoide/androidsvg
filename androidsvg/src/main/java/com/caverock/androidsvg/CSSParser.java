@@ -24,9 +24,6 @@ import org.xml.sax.SAXException;
 
 import android.util.Log;
 
-import com.caverock.androidsvg.SVG.SvgContainer;
-import com.caverock.androidsvg.SVG.SvgElementBase;
-import com.caverock.androidsvg.SVG.SvgObject;
 import com.caverock.androidsvg.SVGParser.TextScanner;
 
 /**
@@ -81,7 +78,7 @@ class CSSParser
       final public String    name;
       final        AttribOp  operation;
       final public String    value;
-      
+
       Attrib(String name, AttribOp op, String value)
       {
          this.name = name;
@@ -203,9 +200,9 @@ class CSSParser
    static class  Rule
    {
       Selector   selector = null;
-      SVG.Style  style = null;
-      
-      Rule(Selector selector, SVG.Style style)
+      Style style = null;
+
+      Rule(Selector selector, Style style)
       {
          this.selector = selector;
          this.style = style;
@@ -223,7 +220,7 @@ class CSSParser
    {
       List<SimpleSelector>  selector = null;
       int                   specificity = 0;
-      
+
       void  add(SimpleSelector part)
       {
          if (this.selector == null)
@@ -276,7 +273,7 @@ class CSSParser
    //===========================================================================================
 
 
-   
+
    CSSParser(MediaType rendererMediaType)
    {
       this.rendererMediaType = rendererMediaType;
@@ -328,8 +325,8 @@ class CSSParser
 
 
    //==============================================================================
-   
-   
+
+
    private static class CSSTextScanner extends TextScanner
    {
       CSSTextScanner(String input)
@@ -349,7 +346,7 @@ class CSSParser
          position = end;
          return result;
       }
-         
+
       private int  scanForIdentifier()
       {
          if (empty())
@@ -439,7 +436,7 @@ class CSSParser
             if (selectorPart == null)
                break;
 
-            // Now check for attribute selection and pseudo selectors   
+            // Now check for attribute selection and pseudo selectors
             if (consume('['))
             {
                skipWhitespace();
@@ -585,7 +582,7 @@ class CSSParser
          List<MediaType>  mediaList = parseMediaList(scan);
          if (!scan.consume('{'))
             throw new SAXException("Invalid @media rule: missing rule set");
-            
+
          scan.skipWhitespace();
          if (mediaMatches(mediaList, rendererMediaType)) {
             inMediaRule = true;
@@ -632,7 +629,7 @@ class CSSParser
 
    private Ruleset  parseRuleset(CSSTextScanner scan) throws SAXException
    {
-      Ruleset  ruleset = new Ruleset(); 
+      Ruleset  ruleset = new Ruleset();
       while (!scan.empty())
       {
          if (scan.consume("<!--"))
@@ -662,7 +659,7 @@ class CSSParser
          if (!scan.consume('{'))
             throw new SAXException("Malformed rule block in <style> element: missing '{'");
          scan.skipWhitespace();
-         SVG.Style  ruleStyle = parseDeclarations(scan);
+         Style ruleStyle = parseDeclarations(scan);
          scan.skipWhitespace();
          for (Selector selector: selectors) {
             ruleset.add( new Rule(selector, ruleStyle) );
@@ -707,9 +704,9 @@ class CSSParser
 
 
    // Parse a list of
-   private SVG.Style  parseDeclarations(CSSTextScanner scan) throws SAXException
+   private Style parseDeclarations(CSSTextScanner scan) throws SAXException
    {
-      SVG.Style  ruleStyle = new SVG.Style();
+      Style ruleStyle = new Style();
       while (true)
       {
          String  propertyName = scan.nextIdentifier();
@@ -776,13 +773,13 @@ class CSSParser
          ancestors.add(0, parent);
          parent = ((SvgObject) parent).parent;
       }
-      
+
       int  ancestorsPos = ancestors.size() - 1;
 
       // Check the most common case first as a shortcut.
       if (selector.size() == 1)
          return selectorMatch(selector.get(0), ancestors, ancestorsPos, obj);
-      
+
       // We start at the last part of the selector and loop back through the parts
       // Get the next selector part
       return ruleMatch(selector, selector.size() - 1, ancestors, ancestorsPos, obj);
@@ -884,7 +881,7 @@ class CSSParser
          // The Group object does not match its tag ("<g>"), so we have to handle it as a special case.
          if (sel.tag.equalsIgnoreCase("G"))
          {
-            if (!(obj instanceof SVG.Group))
+            if (!(obj instanceof Group))
                return false;
          }
          // all other element classes should match their tag names

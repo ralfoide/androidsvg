@@ -20,25 +20,10 @@ import android.graphics.Matrix;
 import android.util.Log;
 
 import com.caverock.androidsvg.CSSParser.MediaType;
-import com.caverock.androidsvg.SVG.Box;
-import com.caverock.androidsvg.SVG.CSSClipRect;
-import com.caverock.androidsvg.SVG.Colour;
-import com.caverock.androidsvg.SVG.CurrentColor;
-import com.caverock.androidsvg.SVG.GradientSpread;
-import com.caverock.androidsvg.SVG.Length;
-import com.caverock.androidsvg.SVG.PaintReference;
-import com.caverock.androidsvg.SVG.Style;
-import com.caverock.androidsvg.SVG.Style.RenderQuality;
-import com.caverock.androidsvg.SVG.Style.TextDecoration;
-import com.caverock.androidsvg.SVG.Style.TextDirection;
-import com.caverock.androidsvg.SVG.Style.VectorEffect;
-import com.caverock.androidsvg.SVG.SvgElementBase;
-import com.caverock.androidsvg.SVG.SvgObject;
-import com.caverock.androidsvg.SVG.SvgPaint;
-import com.caverock.androidsvg.SVG.TextChild;
-import com.caverock.androidsvg.SVG.TextPositionedContainer;
-import com.caverock.androidsvg.SVG.TextRoot;
-import com.caverock.androidsvg.SVG.Unit;
+import com.caverock.androidsvg.Style.RenderQuality;
+import com.caverock.androidsvg.Style.TextDecoration;
+import com.caverock.androidsvg.Style.TextDirection;
+import com.caverock.androidsvg.Style.VectorEffect;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -62,9 +47,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import static android.R.attr.alpha;
-import static com.caverock.androidsvg.SVGAndroidRenderer.colourWithOpacity;
-
 
 /*
  * SVG parser code. Used by SVG class. Should not be called directly.
@@ -80,7 +62,7 @@ class SVGParser extends DefaultHandler2
 
    // SVG parser
    private SVG               svgDocument = null;
-   private SVG.SvgContainer  currentElement = null;
+   private SvgContainer currentElement = null;
 
    // For handling elements we don't support
    private boolean   ignoring = false;
@@ -131,9 +113,9 @@ class SVGParser extends DefaultHandler2
       use,
       view,
       UNSUPPORTED;
-      
+
       private static final Map<String,SVGElem>  cache = new HashMap<>();
-      
+
       public static SVGElem  fromString(String str)
       {
          // First check cache to see if it is there
@@ -153,7 +135,7 @@ class SVGParser extends DefaultHandler2
                cache.put(str, elem);
                return elem;
             }
-         } 
+         }
          catch (IllegalArgumentException e)
          {
             // Do nothing
@@ -243,7 +225,7 @@ class SVGParser extends DefaultHandler2
       font_size,
       font_weight,
       font_style,
-      // font_size_adjust, font_stretch, font_variant,  
+      // font_size_adjust, font_stretch, font_variant,
       gradientTransform,
       gradientUnits,
       height,
@@ -299,7 +281,7 @@ class SVGParser extends DefaultHandler2
       UNSUPPORTED;
 
       private static final Map<String,SVGAttr>  cache = new HashMap<>();
-      
+
       public static SVGAttr  fromString(String str)
       {
          // First check cache to see if it is there
@@ -323,7 +305,7 @@ class SVGParser extends DefaultHandler2
                cache.put(str, attr);
                return attr;
             }
-         } 
+         }
          catch (IllegalArgumentException e)
          {
             // Do nothing
@@ -527,10 +509,10 @@ class SVGParser extends DefaultHandler2
    private static class FontWeightKeywords {
       private static final Map<String, Integer> fontWeightKeywords = new HashMap<>(13);
       static {
-         fontWeightKeywords.put("normal", SVG.Style.FONT_WEIGHT_NORMAL);
-         fontWeightKeywords.put("bold", SVG.Style.FONT_WEIGHT_BOLD);
-         fontWeightKeywords.put("bolder", SVG.Style.FONT_WEIGHT_BOLDER);
-         fontWeightKeywords.put("lighter", SVG.Style.FONT_WEIGHT_LIGHTER);
+         fontWeightKeywords.put("normal", Style.FONT_WEIGHT_NORMAL);
+         fontWeightKeywords.put("bold", Style.FONT_WEIGHT_BOLD);
+         fontWeightKeywords.put("bolder", Style.FONT_WEIGHT_BOLDER);
+         fontWeightKeywords.put("lighter", Style.FONT_WEIGHT_LIGHTER);
          fontWeightKeywords.put("100", 100);
          fontWeightKeywords.put("200", 200);
          fontWeightKeywords.put("300", 300);
@@ -749,19 +731,19 @@ class SVGParser extends DefaultHandler2
          return;
       }
 
-      if (currentElement instanceof SVG.TextContainer)
+      if (currentElement instanceof TextContainer)
       {
          // The SAX parser can pass us several text nodes in a row. If this happens, we
          // want to collapse them all into one SVG.TextSequence node
-         SVG.SvgConditionalContainer  parent = (SVG.SvgConditionalContainer) currentElement;
+         SvgConditionalContainer parent = (SvgConditionalContainer) currentElement;
          int  numOlderSiblings = parent.children.size();
-         SVG.SvgObject  previousSibling = (numOlderSiblings == 0) ? null : parent.children.get(numOlderSiblings-1);
-         if (previousSibling instanceof SVG.TextSequence) {
+         SvgObject previousSibling = (numOlderSiblings == 0) ? null : parent.children.get(numOlderSiblings-1);
+         if (previousSibling instanceof TextSequence) {
             // Last sibling was a TextSequence also, so merge them.
-            ((SVG.TextSequence) previousSibling).text += new String(ch, start, length);
+            ((TextSequence) previousSibling).text += new String(ch, start, length);
          } else {
             // Add a new TextSequence to the child node list
-            currentElement.addChild(new SVG.TextSequence( new String(ch, start, length) ));
+            currentElement.addChild(new TextSequence( new String(ch, start, length) ));
          }
       }
 
@@ -852,7 +834,7 @@ class SVGParser extends DefaultHandler2
 
    }
 
-   
+
    @Override
    public void endDocument() throws SAXException
    {
@@ -862,12 +844,12 @@ class SVGParser extends DefaultHandler2
    }
 
 
-   private void dumpNode(SVG.SvgObject elem, String indent)
+   private void dumpNode(SvgObject elem, String indent)
    {
       Log.d(TAG, indent+elem);
-      if (elem instanceof SVG.SvgConditionalContainer) {
+      if (elem instanceof SvgConditionalContainer) {
          indent = indent+"  ";
-         for (SVG.SvgObject child: ((SVG.SvgConditionalContainer) elem).children) {
+         for (SvgObject child: ((SvgConditionalContainer) elem).children) {
             dumpNode(child, indent);
          }
       }
@@ -893,7 +875,7 @@ class SVGParser extends DefaultHandler2
    {
       debug("<svg>");
 
-      SVG.Svg  obj = new SVG.Svg();
+      SvgViewBox obj = new SvgViewBox();
       obj.document = svgDocument;
       obj.parent = currentElement;
       parseAttributesCore(obj, attributes);
@@ -909,8 +891,8 @@ class SVGParser extends DefaultHandler2
       currentElement = obj;
    }
 
-   
-   private void  parseAttributesSVG(SVG.Svg obj, Attributes attributes) throws SAXException
+
+   private void  parseAttributesSVG(SvgViewBox obj, Attributes attributes) throws SAXException
    {
       for (int i=0; i<attributes.getLength(); i++)
       {
@@ -953,7 +935,7 @@ class SVGParser extends DefaultHandler2
 
       if (currentElement == null)
          throw new SAXException("Invalid document. Root element must be <svg>");
-      SVG.Group  obj = new SVG.Group();
+      Group obj = new Group();
       obj.document = svgDocument;
       obj.parent = currentElement;
       parseAttributesCore(obj, attributes);
@@ -975,7 +957,7 @@ class SVGParser extends DefaultHandler2
 
       if (currentElement == null)
          throw new SAXException("Invalid document. Root element must be <svg>");
-      SVG.Defs  obj = new SVG.Defs();
+      Defs obj = new Defs();
       obj.document = svgDocument;
       obj.parent = currentElement;
       parseAttributesCore(obj, attributes);
@@ -996,7 +978,7 @@ class SVGParser extends DefaultHandler2
 
       if (currentElement == null)
          throw new SAXException("Invalid document. Root element must be <svg>");
-      SVG.Use  obj = new SVG.Use();
+      Use obj = new Use();
       obj.document = svgDocument;
       obj.parent = currentElement;
       parseAttributesCore(obj, attributes);
@@ -1009,7 +991,7 @@ class SVGParser extends DefaultHandler2
    }
 
 
-   private void  parseAttributesUse(SVG.Use obj, Attributes attributes) throws SAXException
+   private void  parseAttributesUse(Use obj, Attributes attributes) throws SAXException
    {
       for (int i=0; i<attributes.getLength(); i++)
       {
@@ -1053,7 +1035,7 @@ class SVGParser extends DefaultHandler2
 
       if (currentElement == null)
          throw new SAXException("Invalid document. Root element must be <svg>");
-      SVG.Image  obj = new SVG.Image();
+      Image obj = new Image();
       obj.document = svgDocument;
       obj.parent = currentElement;
       parseAttributesCore(obj, attributes);
@@ -1066,7 +1048,7 @@ class SVGParser extends DefaultHandler2
    }
 
 
-   private void  parseAttributesImage(SVG.Image obj, Attributes attributes) throws SAXException
+   private void  parseAttributesImage(Image obj, Attributes attributes) throws SAXException
    {
       for (int i=0; i<attributes.getLength(); i++)
       {
@@ -1113,7 +1095,7 @@ class SVGParser extends DefaultHandler2
 
       if (currentElement == null)
          throw new SAXException("Invalid document. Root element must be <svg>");
-      SVG.Path  obj = new SVG.Path();
+      Path obj = new Path();
       obj.document = svgDocument;
       obj.parent = currentElement;
       parseAttributesCore(obj, attributes);
@@ -1121,11 +1103,11 @@ class SVGParser extends DefaultHandler2
       parseAttributesTransform(obj, attributes);
       parseAttributesConditional(obj, attributes);
       parseAttributesPath(obj, attributes);
-      currentElement.addChild(obj);     
+      currentElement.addChild(obj);
    }
 
 
-   private void  parseAttributesPath(SVG.Path obj, Attributes attributes) throws SAXException
+   private void  parseAttributesPath(Path obj, Attributes attributes) throws SAXException
    {
       for (int i=0; i<attributes.getLength(); i++)
       {
@@ -1157,7 +1139,7 @@ class SVGParser extends DefaultHandler2
 
       if (currentElement == null)
          throw new SAXException("Invalid document. Root element must be <svg>");
-      SVG.Rect  obj = new SVG.Rect();
+      Rect obj = new Rect();
       obj.document = svgDocument;
       obj.parent = currentElement;
       parseAttributesCore(obj, attributes);
@@ -1165,11 +1147,11 @@ class SVGParser extends DefaultHandler2
       parseAttributesTransform(obj, attributes);
       parseAttributesConditional(obj, attributes);
       parseAttributesRect(obj, attributes);
-      currentElement.addChild(obj);     
+      currentElement.addChild(obj);
    }
 
 
-   private void  parseAttributesRect(SVG.Rect obj, Attributes attributes) throws SAXException
+   private void  parseAttributesRect(Rect obj, Attributes attributes) throws SAXException
    {
       for (int i=0; i<attributes.getLength(); i++)
       {
@@ -1219,7 +1201,7 @@ class SVGParser extends DefaultHandler2
 
       if (currentElement == null)
          throw new SAXException("Invalid document. Root element must be <svg>");
-      SVG.Circle  obj = new SVG.Circle();
+      Circle obj = new Circle();
       obj.document = svgDocument;
       obj.parent = currentElement;
       parseAttributesCore(obj, attributes);
@@ -1227,11 +1209,11 @@ class SVGParser extends DefaultHandler2
       parseAttributesTransform(obj, attributes);
       parseAttributesConditional(obj, attributes);
       parseAttributesCircle(obj, attributes);
-      currentElement.addChild(obj);     
+      currentElement.addChild(obj);
    }
 
 
-   private void  parseAttributesCircle(SVG.Circle obj, Attributes attributes) throws SAXException
+   private void  parseAttributesCircle(Circle obj, Attributes attributes) throws SAXException
    {
       for (int i=0; i<attributes.getLength(); i++)
       {
@@ -1266,7 +1248,7 @@ class SVGParser extends DefaultHandler2
 
       if (currentElement == null)
          throw new SAXException("Invalid document. Root element must be <svg>");
-      SVG.Ellipse  obj = new SVG.Ellipse();
+      Ellipse obj = new Ellipse();
       obj.document = svgDocument;
       obj.parent = currentElement;
       parseAttributesCore(obj, attributes);
@@ -1274,11 +1256,11 @@ class SVGParser extends DefaultHandler2
       parseAttributesTransform(obj, attributes);
       parseAttributesConditional(obj, attributes);
       parseAttributesEllipse(obj, attributes);
-      currentElement.addChild(obj);     
+      currentElement.addChild(obj);
    }
 
 
-   private void  parseAttributesEllipse(SVG.Ellipse obj, Attributes attributes) throws SAXException
+   private void  parseAttributesEllipse(Ellipse obj, Attributes attributes) throws SAXException
    {
       for (int i=0; i<attributes.getLength(); i++)
       {
@@ -1318,7 +1300,7 @@ class SVGParser extends DefaultHandler2
 
       if (currentElement == null)
          throw new SAXException("Invalid document. Root element must be <svg>");
-      SVG.Line  obj = new SVG.Line();
+      Line obj = new Line();
       obj.document = svgDocument;
       obj.parent = currentElement;
       parseAttributesCore(obj, attributes);
@@ -1326,11 +1308,11 @@ class SVGParser extends DefaultHandler2
       parseAttributesTransform(obj, attributes);
       parseAttributesConditional(obj, attributes);
       parseAttributesLine(obj, attributes);
-      currentElement.addChild(obj);     
+      currentElement.addChild(obj);
    }
 
 
-   private void  parseAttributesLine(SVG.Line obj, Attributes attributes) throws SAXException
+   private void  parseAttributesLine(Line obj, Attributes attributes) throws SAXException
    {
       for (int i=0; i<attributes.getLength(); i++)
       {
@@ -1366,7 +1348,7 @@ class SVGParser extends DefaultHandler2
 
       if (currentElement == null)
          throw new SAXException("Invalid document. Root element must be <svg>");
-      SVG.PolyLine  obj = new SVG.PolyLine();
+      PolyLine obj = new PolyLine();
       obj.document = svgDocument;
       obj.parent = currentElement;
       parseAttributesCore(obj, attributes);
@@ -1374,14 +1356,14 @@ class SVGParser extends DefaultHandler2
       parseAttributesTransform(obj, attributes);
       parseAttributesConditional(obj, attributes);
       parseAttributesPolyLine(obj, attributes, "polyline");
-      currentElement.addChild(obj);     
+      currentElement.addChild(obj);
    }
 
 
    /*
     *  Parse the "points" attribute. Used by both <polyline> and <polygon>.
     */
-   private void  parseAttributesPolyLine(SVG.PolyLine obj, Attributes attributes, String tag) throws SAXException
+   private void  parseAttributesPolyLine(PolyLine obj, Attributes attributes, String tag) throws SAXException
    {
       for (int i=0; i<attributes.getLength(); i++)
       {
@@ -1423,7 +1405,7 @@ class SVGParser extends DefaultHandler2
 
       if (currentElement == null)
          throw new SAXException("Invalid document. Root element must be <svg>");
-      SVG.Polygon  obj = new SVG.Polygon();
+      Polygon obj = new Polygon();
       obj.document = svgDocument;
       obj.parent = currentElement;
       parseAttributesCore(obj, attributes);
@@ -1431,7 +1413,7 @@ class SVGParser extends DefaultHandler2
       parseAttributesTransform(obj, attributes);
       parseAttributesConditional(obj, attributes);
       parseAttributesPolyLine(obj, attributes, "polygon"); // reuse of polyline "points" parser
-      currentElement.addChild(obj);     
+      currentElement.addChild(obj);
    }
 
 
@@ -1445,7 +1427,7 @@ class SVGParser extends DefaultHandler2
 
       if (currentElement == null)
          throw new SAXException("Invalid document. Root element must be <svg>");
-      SVG.Text  obj = new SVG.Text();
+      Text obj = new Text();
       obj.document = svgDocument;
       obj.parent = currentElement;
       parseAttributesCore(obj, attributes);
@@ -1494,9 +1476,9 @@ class SVGParser extends DefaultHandler2
 
       if (currentElement == null)
          throw new SAXException("Invalid document. Root element must be <svg>");
-      if (!(currentElement instanceof SVG.TextContainer))
+      if (!(currentElement instanceof TextContainer))
          throw new SAXException("Invalid document. <tspan> elements are only valid inside <text> or other <tspan> elements.");
-      SVG.TSpan  obj = new SVG.TSpan();
+      TSpan obj = new TSpan();
       obj.document = svgDocument;
       obj.parent = currentElement;
       parseAttributesCore(obj, attributes);
@@ -1522,9 +1504,9 @@ class SVGParser extends DefaultHandler2
 
       if (currentElement == null)
          throw new SAXException("Invalid document. Root element must be <svg>");
-      if (!(currentElement instanceof SVG.TextContainer))
+      if (!(currentElement instanceof TextContainer))
          throw new SAXException("Invalid document. <tref> elements are only valid inside <text> or <tspan> elements.");
-      SVG.TRef  obj = new SVG.TRef();
+      TRef obj = new TRef();
       obj.document = svgDocument;
       obj.parent = currentElement;
       parseAttributesCore(obj, attributes);
@@ -1539,7 +1521,7 @@ class SVGParser extends DefaultHandler2
    }
 
 
-   private void  parseAttributesTRef(SVG.TRef obj, Attributes attributes) throws SAXException
+   private void  parseAttributesTRef(TRef obj, Attributes attributes) throws SAXException
    {
       for (int i=0; i<attributes.getLength(); i++)
       {
@@ -1567,7 +1549,7 @@ class SVGParser extends DefaultHandler2
 
       if (currentElement == null)
          throw new SAXException("Invalid document. Root element must be <svg>");
-      SVG.Switch  obj = new SVG.Switch();
+      Switch obj = new Switch();
       obj.document = svgDocument;
       obj.parent = currentElement;
       parseAttributesCore(obj, attributes);
@@ -1579,7 +1561,7 @@ class SVGParser extends DefaultHandler2
    }
 
 
-   private void  parseAttributesConditional(SVG.SvgConditional obj, Attributes attributes) throws SAXException
+   private void  parseAttributesConditional(SvgConditional obj, Attributes attributes) throws SAXException
    {
       for (int i=0; i<attributes.getLength(); i++)
       {
@@ -1620,7 +1602,7 @@ class SVGParser extends DefaultHandler2
 
       if (currentElement == null)
          throw new SAXException("Invalid document. Root element must be <svg>");
-      SVG.Symbol  obj = new SVG.Symbol();
+      Symbol obj = new Symbol();
       obj.document = svgDocument;
       obj.parent = currentElement;
       parseAttributesCore(obj, attributes);
@@ -1631,7 +1613,7 @@ class SVGParser extends DefaultHandler2
       currentElement = obj;
    }
 
-   
+
    //=========================================================================
    // <marker> element
 
@@ -1642,7 +1624,7 @@ class SVGParser extends DefaultHandler2
 
       if (currentElement == null)
          throw new SAXException("Invalid document. Root element must be <svg>");
-      SVG.Marker  obj = new SVG.Marker();
+      Marker obj = new Marker();
       obj.document = svgDocument;
       obj.parent = currentElement;
       parseAttributesCore(obj, attributes);
@@ -1655,7 +1637,7 @@ class SVGParser extends DefaultHandler2
    }
 
 
-   private void  parseAttributesMarker(SVG.Marker obj, Attributes attributes) throws SAXException
+   private void  parseAttributesMarker(Marker obj, Attributes attributes) throws SAXException
    {
       for (int i=0; i<attributes.getLength(); i++)
       {
@@ -1685,7 +1667,7 @@ class SVGParser extends DefaultHandler2
                   obj.markerUnitsAreUser = true;
                } else {
                   throw new SAXException("Invalid value for attribute markerUnits");
-               } 
+               }
                break;
             case orient:
                if ("auto".equals(val)) {
@@ -1711,7 +1693,7 @@ class SVGParser extends DefaultHandler2
 
       if (currentElement == null)
          throw new SAXException("Invalid document. Root element must be <svg>");
-      SVG.SvgLinearGradient  obj = new SVG.SvgLinearGradient();
+      SvgLinearGradient obj = new SvgLinearGradient();
       obj.document = svgDocument;
       obj.parent = currentElement;
       parseAttributesCore(obj, attributes);
@@ -1723,7 +1705,7 @@ class SVGParser extends DefaultHandler2
    }
 
 
-   private void  parseAttributesGradient(SVG.GradientElement obj, Attributes attributes) throws SAXException
+   private void  parseAttributesGradient(GradientElement obj, Attributes attributes) throws SAXException
    {
       for (int i=0; i<attributes.getLength(); i++)
       {
@@ -1737,7 +1719,7 @@ class SVGParser extends DefaultHandler2
                   obj.gradientUnitsAreUser = true;
                } else {
                   throw new SAXException("Invalid value for attribute gradientUnits");
-               } 
+               }
                break;
             case gradientTransform:
                obj.gradientTransform = parseTransformList(val);
@@ -1746,7 +1728,7 @@ class SVGParser extends DefaultHandler2
                try
                {
                   obj.spreadMethod = GradientSpread.valueOf(val);
-               } 
+               }
                catch (IllegalArgumentException e)
                {
                   throw new SAXException("Invalid spreadMethod attribute. \""+val+"\" is not a valid value.");
@@ -1763,7 +1745,7 @@ class SVGParser extends DefaultHandler2
    }
 
 
-   private void  parseAttributesLinearGradient(SVG.SvgLinearGradient obj, Attributes attributes) throws SAXException
+   private void  parseAttributesLinearGradient(SvgLinearGradient obj, Attributes attributes) throws SAXException
    {
       for (int i=0; i<attributes.getLength(); i++)
       {
@@ -1799,7 +1781,7 @@ class SVGParser extends DefaultHandler2
 
       if (currentElement == null)
          throw new SAXException("Invalid document. Root element must be <svg>");
-      SVG.SvgRadialGradient  obj = new SVG.SvgRadialGradient();
+      SvgRadialGradient obj = new SvgRadialGradient();
       obj.document = svgDocument;
       obj.parent = currentElement;
       parseAttributesCore(obj, attributes);
@@ -1811,7 +1793,7 @@ class SVGParser extends DefaultHandler2
    }
 
 
-   private void  parseAttributesRadialGradient(SVG.SvgRadialGradient obj, Attributes attributes) throws SAXException
+   private void  parseAttributesRadialGradient(SvgRadialGradient obj, Attributes attributes) throws SAXException
    {
       for (int i=0; i<attributes.getLength(); i++)
       {
@@ -1852,9 +1834,9 @@ class SVGParser extends DefaultHandler2
 
       if (currentElement == null)
          throw new SAXException("Invalid document. Root element must be <svg>");
-      if (!(currentElement instanceof SVG.GradientElement))
+      if (!(currentElement instanceof GradientElement))
          throw new SAXException("Invalid document. <stop> elements are only valid inside <linearGradient> or <radialGradient> elements.");
-      SVG.Stop  obj = new SVG.Stop();
+      Stop obj = new Stop();
       obj.document = svgDocument;
       obj.parent = currentElement;
       parseAttributesCore(obj, attributes);
@@ -1865,7 +1847,7 @@ class SVGParser extends DefaultHandler2
    }
 
 
-   private void  parseAttributesStop(SVG.Stop obj, Attributes attributes) throws SAXException
+   private void  parseAttributesStop(Stop obj, Attributes attributes) throws SAXException
    {
       for (int i=0; i<attributes.getLength(); i++)
       {
@@ -1917,7 +1899,7 @@ class SVGParser extends DefaultHandler2
 
       if (currentElement == null)
          throw new SAXException("Invalid document. Root element must be <svg>");
-      SVG.SolidColor  obj = new SVG.SolidColor();
+      SolidColor obj = new SolidColor();
       obj.document = svgDocument;
       obj.parent = currentElement;
       parseAttributesCore(obj, attributes);
@@ -1937,7 +1919,7 @@ class SVGParser extends DefaultHandler2
 
       if (currentElement == null)
          throw new SAXException("Invalid document. Root element must be <svg>");
-      SVG.ClipPath  obj = new SVG.ClipPath();
+      ClipPath obj = new ClipPath();
       obj.document = svgDocument;
       obj.parent = currentElement;
       parseAttributesCore(obj, attributes);
@@ -1950,7 +1932,7 @@ class SVGParser extends DefaultHandler2
    }
 
 
-   private void  parseAttributesClipPath(SVG.ClipPath obj, Attributes attributes) throws SAXException
+   private void  parseAttributesClipPath(ClipPath obj, Attributes attributes) throws SAXException
    {
       for (int i=0; i<attributes.getLength(); i++)
       {
@@ -1983,7 +1965,7 @@ class SVGParser extends DefaultHandler2
 
       if (currentElement == null)
          throw new SAXException("Invalid document. Root element must be <svg>");
-      SVG.TextPath  obj = new SVG.TextPath();
+      TextPath obj = new TextPath();
       obj.document = svgDocument;
       obj.parent = currentElement;
       parseAttributesCore(obj, attributes);
@@ -1999,7 +1981,7 @@ class SVGParser extends DefaultHandler2
    }
 
 
-   private void  parseAttributesTextPath(SVG.TextPath obj, Attributes attributes) throws SAXException
+   private void  parseAttributesTextPath(TextPath obj, Attributes attributes) throws SAXException
    {
       for (int i=0; i<attributes.getLength(); i++)
       {
@@ -2030,7 +2012,7 @@ class SVGParser extends DefaultHandler2
 
       if (currentElement == null)
          throw new SAXException("Invalid document. Root element must be <svg>");
-      SVG.Pattern  obj = new SVG.Pattern();
+      Pattern obj = new Pattern();
       obj.document = svgDocument;
       obj.parent = currentElement;
       parseAttributesCore(obj, attributes);
@@ -2043,7 +2025,7 @@ class SVGParser extends DefaultHandler2
    }
 
 
-   private void  parseAttributesPattern(SVG.Pattern obj, Attributes attributes) throws SAXException
+   private void  parseAttributesPattern(Pattern obj, Attributes attributes) throws SAXException
    {
       for (int i=0; i<attributes.getLength(); i++)
       {
@@ -2057,7 +2039,7 @@ class SVGParser extends DefaultHandler2
                   obj.patternUnitsAreUser = true;
                } else {
                   throw new SAXException("Invalid value for attribute patternUnits");
-               } 
+               }
                break;
             case patternContentUnits:
                if ("objectBoundingBox".equals(val)) {
@@ -2066,7 +2048,7 @@ class SVGParser extends DefaultHandler2
                   obj.patternContentUnitsAreUser = true;
                } else {
                   throw new SAXException("Invalid value for attribute patternContentUnits");
-               } 
+               }
                break;
             case patternTransform:
                obj.patternTransform = parseTransformList(val);
@@ -2108,7 +2090,7 @@ class SVGParser extends DefaultHandler2
 
       if (currentElement == null)
          throw new SAXException("Invalid document. Root element must be <svg>");
-      SVG.View  obj = new SVG.View();
+      View obj = new View();
       obj.document = svgDocument;
       obj.parent = currentElement;
       parseAttributesCore(obj, attributes);
@@ -2118,7 +2100,7 @@ class SVGParser extends DefaultHandler2
       currentElement = obj;
    }
 
-   
+
    //=========================================================================
    // <mask> element
 
@@ -2129,7 +2111,7 @@ class SVGParser extends DefaultHandler2
 
       if (currentElement == null)
          throw new SAXException("Invalid document. Root element must be <svg>");
-      SVG.Mask  obj = new SVG.Mask();
+      Mask obj = new Mask();
       obj.document = svgDocument;
       obj.parent = currentElement;
       parseAttributesCore(obj, attributes);
@@ -2141,7 +2123,7 @@ class SVGParser extends DefaultHandler2
    }
 
 
-   private void  parseAttributesMask(SVG.Mask obj, Attributes attributes) throws SAXException
+   private void  parseAttributesMask(Mask obj, Attributes attributes) throws SAXException
    {
       for (int i=0; i<attributes.getLength(); i++)
       {
@@ -2155,7 +2137,7 @@ class SVGParser extends DefaultHandler2
                   obj.maskUnitsAreUser = true;
                } else {
                   throw new SAXException("Invalid value for attribute maskUnits");
-               } 
+               }
                break;
             case maskContentUnits:
                if ("objectBoundingBox".equals(val)) {
@@ -2164,7 +2146,7 @@ class SVGParser extends DefaultHandler2
                   obj.maskContentUnitsAreUser = true;
                } else {
                   throw new SAXException("Invalid value for attribute maskContentUnits");
-               } 
+               }
                break;
             case x:
                obj.x = parseLength(val);
@@ -2428,7 +2410,7 @@ class SVGParser extends DefaultHandler2
          int  ch = input.charAt(position);
          if ((!allowWhitespace && isWhitespace(ch)) || ch == terminator)
             return null;
-         
+
          int  start = position;
          ch = advanceChar();
          while (ch != -1) {
@@ -2910,7 +2892,7 @@ class SVGParser extends DefaultHandler2
    }
 
 
-   private void  parseAttributesViewBox(SVG.SvgViewBoxContainer obj, Attributes attributes) throws SAXException
+   private void  parseAttributesViewBox(SvgViewBoxContainer obj, Attributes attributes) throws SAXException
    {
       for (int i=0; i<attributes.getLength(); i++)
       {
@@ -2930,7 +2912,7 @@ class SVGParser extends DefaultHandler2
    }
 
 
-   private void  parseAttributesTransform(SVG.HasTransform obj, Attributes attributes) throws SAXException
+   private void  parseAttributesTransform(HasTransform obj, Attributes attributes) throws SAXException
    {
       for (int i=0; i<attributes.getLength(); i++)
       {
@@ -3192,14 +3174,14 @@ class SVGParser extends DefaultHandler2
       if (height < 0)
          throw new SAXException("Invalid viewBox. height cannot be negative");
 
-      return new SVG.Box(minX, minY, width, height);
+      return new Box(minX, minY, width, height);
    }
 
 
    /*
-    * 
+    *
     */
-   private static void  parsePreserveAspectRatio(SVG.SvgPreserveAspectRatioContainer obj, String val) throws SAXException
+   private static void  parsePreserveAspectRatio(SvgPreserveAspectRatioContainer obj, String val) throws SAXException
    {
       TextScanner scan = new TextScanner(val);
       scan.skipWhitespace();
@@ -3237,7 +3219,7 @@ class SVGParser extends DefaultHandler2
    {
       if (val.startsWith("url("))
       {
-         int  closeBracket = val.indexOf(")"); 
+         int  closeBracket = val.indexOf(")");
          if (closeBracket == -1)
             throw new SVGParseException("Bad "+attrName+" attribute. Unterminated url() reference");
 
@@ -3436,7 +3418,7 @@ class SVGParser extends DefaultHandler2
       // Start by checking for the fixed size standard system font names (which we don't support)
       if (!"|caption|icon|menu|message-box|small-caption|status-bar|".contains('|'+val+'|'))
          return;
-         
+
       // Fist part: style/variant/weight (opt - one or more)
       TextScanner  scan = new TextScanner(val);
       String       item;
@@ -3468,7 +3450,7 @@ class SVGParser extends DefaultHandler2
          // Not any of these. Break and try next section
          break;
       }
-      
+
       // Second part: font size (reqd) and line-height (opt)
       Length  fontSize = parseFontSize(item);
 
@@ -3482,7 +3464,7 @@ class SVGParser extends DefaultHandler2
          parseLength(item);
          scan.skipWhitespace();
       }
-      
+
       // Third part: font family
       style.fontFamily = parseFontFamily(scan.restOfText());
       style.fontSize = fontSize;
@@ -3636,7 +3618,7 @@ class SVGParser extends DefaultHandler2
 
       if (scan.empty())
          return null;
-      
+
       Length dash = scan.nextLength();
       if (dash == null)
          return null;
@@ -3663,7 +3645,7 @@ class SVGParser extends DefaultHandler2
       // be treated as "none" ie a solid stroke.
       if (sum == 0f)
          return null;
-      
+
       return dashes.toArray(new Length[dashes.size()]);
    }
 
@@ -3756,7 +3738,7 @@ class SVGParser extends DefaultHandler2
 
 
    // Parse the string that defines a path.
-   private static SVG.PathDefinition  parsePath(String val) throws SAXException
+   private static PathDefinition parsePath(String val) throws SAXException
    {
       TextScanner  scan = new TextScanner(val);
 
@@ -3767,7 +3749,7 @@ class SVGParser extends DefaultHandler2
       float   rx,ry, xAxisRotation;
       Boolean largeArcFlag, sweepFlag;
 
-      SVG.PathDefinition  path = new SVG.PathDefinition();
+      PathDefinition path = new PathDefinition();
 
       if (scan.empty())
          return path;
@@ -4004,7 +3986,7 @@ class SVGParser extends DefaultHandler2
    //=========================================================================
    // Conditional processing (ie for <switch> element)
 
-   
+
    // Parse the attribute that declares the list of SVG features that must be
    // supported if we are to render this element
    private static Set<String>  parseRequiredFeatures(String val) throws SAXException
@@ -4039,7 +4021,7 @@ class SVGParser extends DefaultHandler2
       while (!scan.empty())
       {
          String language = scan.nextToken();
-         int  hyphenPos = language.indexOf('-'); 
+         int  hyphenPos = language.indexOf('-');
          if (hyphenPos != -1) {
             language = language.substring(0, hyphenPos);
          }
