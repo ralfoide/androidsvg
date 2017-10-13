@@ -38,6 +38,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * AndroidSVG is a library for reading, parsing and rendering SVG documents on Android devices.
@@ -994,6 +995,33 @@ public class SVG {
         return null;
     }
 
+    public Set<String> getAllElementIds() {
+        Set<String> ids = new TreeSet<>();
+
+        if (rootElement != null) {
+            ids.add(rootElement.id);
+            collectAllElementIds(rootElement, ids);
+        }
+
+        return ids;
+    }
+
+    private void collectAllElementIds(SvgContainer container, Set<String> ids) {
+        if (container == null) {
+            return;
+        }
+        for (SvgObject child : container.getChildren()) {
+            if (child instanceof SvgElement) {
+                SvgElement element = (SvgElement) child;
+                if (element.id != null) {
+                    ids.add(element.id);
+                }
+            }
+            if (child instanceof SvgContainer) {
+                collectAllElementIds((SvgContainer) child, ids);
+            }
+        }
+    }
 
     @SuppressWarnings("rawtypes")
     private List<SvgObject> getElementsByTagName(Class clazz) {
