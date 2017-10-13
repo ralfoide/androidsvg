@@ -32,11 +32,10 @@ import com.caverock.androidsvg.tag.Polygon;
 import com.caverock.androidsvg.tag.Rect;
 import com.caverock.androidsvg.tag.SolidColor;
 import com.caverock.androidsvg.tag.Stop;
-import com.caverock.androidsvg.tag.Style;
-import com.caverock.androidsvg.tag.Style.RenderQuality;
-import com.caverock.androidsvg.tag.Style.TextDecoration;
-import com.caverock.androidsvg.tag.Style.TextDirection;
-import com.caverock.androidsvg.tag.Style.VectorEffect;
+import com.caverock.androidsvg.Style.RenderQuality;
+import com.caverock.androidsvg.Style.TextDecoration;
+import com.caverock.androidsvg.Style.TextDirection;
+import com.caverock.androidsvg.Style.VectorEffect;
 
 import com.caverock.androidsvg.tag.Circle;
 import com.caverock.androidsvg.tag.ClipPath;

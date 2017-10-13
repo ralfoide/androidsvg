@@ -99,7 +99,7 @@ public class SVG {
     private Ruleset cssRules = new Ruleset();
 
     // Map from id attribute to element
-    private Map<String, SvgElementBase> idToElementMap = new HashMap<>();
+    private Map<String, SvgElement> idToElementMap = new HashMap<>();
 
 
     SVG() {
@@ -952,7 +952,7 @@ public class SVG {
     // Path definition
 
 
-    private SvgObject getElementById(String id) {
+    public SvgElement getElementById(String id) {
         if (id == null || id.length() == 0) {
             return null;
         }
@@ -965,27 +965,27 @@ public class SVG {
         }
 
         // Search the object tree for a node with id property that matches 'id'
-        SvgElementBase result = getElementById(rootElement, id);
+        SvgElement result = getElementById(rootElement, id);
         idToElementMap.put(id, result);
         return result;
     }
 
 
-    private SvgElementBase getElementById(SvgContainer obj, String id) {
-        SvgElementBase elem = (SvgElementBase) obj;
+    private SvgElement getElementById(SvgContainer obj, String id) {
+        SvgElement elem = (SvgElement) obj;
         if (id.equals(elem.id)) {
             return elem;
         }
         for (SvgObject child : obj.getChildren()) {
-            if (!(child instanceof SvgElementBase)) {
+            if (!(child instanceof SvgElement)) {
                 continue;
             }
-            SvgElementBase childElem = (SvgElementBase) child;
+            SvgElement childElem = (SvgElement) child;
             if (id.equals(childElem.id)) {
                 return childElem;
             }
             if (child instanceof SvgContainer) {
-                SvgElementBase found = getElementById((SvgContainer) child, id);
+                SvgElement found = getElementById((SvgContainer) child, id);
                 if (found != null) {
                     return found;
                 }

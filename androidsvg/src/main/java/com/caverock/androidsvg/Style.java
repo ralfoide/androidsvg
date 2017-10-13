@@ -1,11 +1,4 @@
-package com.caverock.androidsvg.tag;
-
-import com.caverock.androidsvg.CSSClipRect;
-import com.caverock.androidsvg.Colour;
-import com.caverock.androidsvg.Length;
-import com.caverock.androidsvg.SVG;
-import com.caverock.androidsvg.SvgPaint;
-import com.caverock.androidsvg.Unit;
+package com.caverock.androidsvg;
 
 import java.util.List;
 

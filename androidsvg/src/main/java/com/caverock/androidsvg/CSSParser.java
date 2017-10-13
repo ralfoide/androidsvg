@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Locale;
 
 import com.caverock.androidsvg.tag.Group;
-import com.caverock.androidsvg.tag.Style;
 import org.xml.sax.SAXException;
 
 import android.util.Log;

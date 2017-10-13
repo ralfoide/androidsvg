@@ -1,7 +1,7 @@
 package com.caverock.androidsvg;
 
 public class Colour extends SvgPaint {
-    int colour;
+    public int colour;
 
     public static final Colour BLACK = new Colour(0xff000000);  // Black singleton - a common default value.
 
