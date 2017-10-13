@@ -1,5 +1,5 @@
 package com.caverock.androidsvg;
 
-class SvgViewBoxContainer extends SvgPreserveAspectRatioContainer {
-    Box viewBox;
+public class SvgViewBoxContainer extends SvgPreserveAspectRatioContainer {
+    public Box viewBox;
 }

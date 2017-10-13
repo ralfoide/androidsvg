@@ -26,6 +26,7 @@ import android.util.Log;
 
 import com.caverock.androidsvg.CSSParser.Ruleset;
 
+import com.caverock.androidsvg.tag.View;
 import org.xml.sax.SAXException;
 
 import java.io.ByteArrayInputStream;
@@ -912,7 +913,7 @@ public class SVG {
     static final long SPECIFIED_DIRECTION = (1L << 36);
     static final long SPECIFIED_IMAGE_RENDERING = (1L << 37);
 
-    static final long SPECIFIED_ALL = 0xffffffff;
+    public static final long SPECIFIED_ALL = 0xffffffff;
 
    /*
    protected static final long SPECIFIED_NON_INHERITING = SPECIFIED_DISPLAY | SPECIFIED_OVERFLOW | SPECIFIED_CLIP

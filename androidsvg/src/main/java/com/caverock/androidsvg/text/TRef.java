@@ -1,8 +1,7 @@
-package com.caverock.androidsvg;
+package com.caverock.androidsvg.text;
 
-class TextPath extends TextContainer implements TextChild {
-    String href;
-    Length startOffset;
+public class TRef extends TextContainer implements TextChild {
+    public String href;
 
     private TextRoot textRoot;
 

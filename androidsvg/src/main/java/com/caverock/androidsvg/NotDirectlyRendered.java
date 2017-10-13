@@ -1,4 +1,4 @@
 package com.caverock.androidsvg;
 
-interface NotDirectlyRendered {
+public interface NotDirectlyRendered {
 }

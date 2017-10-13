@@ -1,70 +1,77 @@
-package com.caverock.androidsvg;
+package com.caverock.androidsvg.tag;
+
+import com.caverock.androidsvg.CSSClipRect;
+import com.caverock.androidsvg.Colour;
+import com.caverock.androidsvg.Length;
+import com.caverock.androidsvg.SVG;
+import com.caverock.androidsvg.SvgPaint;
+import com.caverock.androidsvg.Unit;
 
 import java.util.List;
 
-class Style implements Cloneable {
+public class Style implements Cloneable {
     // Which properties have been explicitly specified by this element
-    long specifiedFlags = 0;
+    public long specifiedFlags = 0;
 
-    SvgPaint fill;
-    FillRule fillRule;
-    Float fillOpacity;
+    public SvgPaint fill;
+    public FillRule fillRule;
+    public Float fillOpacity;
 
-    SvgPaint stroke;
-    Float strokeOpacity;
-    Length strokeWidth;
-    LineCaps strokeLineCap;
-    LineJoin strokeLineJoin;
-    Float strokeMiterLimit;
-    Length[] strokeDashArray;
-    Length strokeDashOffset;
+    public SvgPaint stroke;
+    public Float strokeOpacity;
+    public Length strokeWidth;
+    public LineCaps strokeLineCap;
+    public LineJoin strokeLineJoin;
+    public Float strokeMiterLimit;
+    public Length[] strokeDashArray;
+    public Length strokeDashOffset;
 
-    Float opacity; // master opacity of both stroke and fill
+    public Float opacity; // master opacity of both stroke and fill
 
-    Colour color;
+    public Colour color;
 
-    List<String> fontFamily;
-    Length fontSize;
-    Integer fontWeight;
-    FontStyle fontStyle;
-    TextDecoration textDecoration;
-    TextDirection direction;
+    public List<String> fontFamily;
+    public Length fontSize;
+    public Integer fontWeight;
+    public FontStyle fontStyle;
+    public TextDecoration textDecoration;
+    public TextDirection direction;
 
-    TextAnchor textAnchor;
+    public TextAnchor textAnchor;
 
-    Boolean overflow;  // true if overflow visible
-    CSSClipRect clip;
+    public Boolean overflow;  // true if overflow visible
+    public CSSClipRect clip;
 
-    String markerStart;
-    String markerMid;
-    String markerEnd;
+    public String markerStart;
+    public String markerMid;
+    public String markerEnd;
 
-    Boolean display;    // true if we should display
-    Boolean visibility; // true if visible
+    public Boolean display;    // true if we should display
+    public Boolean visibility; // true if visible
 
-    SvgPaint stopColor;
-    Float stopOpacity;
+    public SvgPaint stopColor;
+    public Float stopOpacity;
 
-    String clipPath;
-    FillRule clipRule;
+    public String clipPath;
+    public FillRule clipRule;
 
-    String mask;
+    public String mask;
 
-    SvgPaint solidColor;
-    Float solidOpacity;
+    public SvgPaint solidColor;
+    public Float solidOpacity;
 
-    SvgPaint viewportFill;
-    Float viewportFillOpacity;
+    public SvgPaint viewportFill;
+    public Float viewportFillOpacity;
 
-    VectorEffect vectorEffect;
+    public VectorEffect vectorEffect;
 
-    RenderQuality imageRendering;
+    public RenderQuality imageRendering;
 
 
-    static final int FONT_WEIGHT_NORMAL = 400;
-    static final int FONT_WEIGHT_BOLD = 700;
-    static final int FONT_WEIGHT_LIGHTER = -1;
-    static final int FONT_WEIGHT_BOLDER = +1;
+    public static final int FONT_WEIGHT_NORMAL = 400;
+    public static final int FONT_WEIGHT_BOLD = 700;
+    public static final int FONT_WEIGHT_LIGHTER = -1;
+    public static final int FONT_WEIGHT_BOLDER = +1;
 
 
     public enum FillRule {
@@ -120,7 +127,7 @@ class Style implements Cloneable {
         optimizeSpeed
     }
 
-    static Style getDefaultStyle() {
+    public static Style getDefaultStyle() {
         Style def = new Style();
         def.specifiedFlags = SVG.SPECIFIED_ALL;
         //def.inheritFlags = 0;
@@ -168,7 +175,7 @@ class Style implements Cloneable {
 
     // Called on the state.style object to reset the properties that don't inherit
     // from the parent style.
-    void resetNonInheritingProperties(boolean isRootSVG) {
+    public void resetNonInheritingProperties(boolean isRootSVG) {
         this.display = Boolean.TRUE;
         this.overflow = isRootSVG ? Boolean.TRUE : Boolean.FALSE;
         this.clip = null;
@@ -186,7 +193,7 @@ class Style implements Cloneable {
 
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
+    public Object clone() throws CloneNotSupportedException {
         Style obj = (Style) super.clone();
         if (strokeDashArray != null) {
             obj.strokeDashArray = strokeDashArray.clone();

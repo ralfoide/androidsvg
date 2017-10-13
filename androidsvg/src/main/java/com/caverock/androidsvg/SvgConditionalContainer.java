@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-class SvgConditionalContainer extends SvgElement implements SvgContainer, SvgConditional {
-    List<SvgObject> children = new ArrayList<>();
+public class SvgConditionalContainer extends SvgElement implements SvgContainer, SvgConditional {
+    public List<SvgObject> children = new ArrayList<>();
 
     Set<String> requiredFeatures = null;
     String requiredExtensions = null;

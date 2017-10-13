@@ -1,6 +1,6 @@
 package com.caverock.androidsvg;
 
-class PathDefinition implements PathInterface {
+public class PathDefinition implements PathInterface {
     private byte[] commands = null;
     private int commandsLength = 0;
     private float[] coords = null;

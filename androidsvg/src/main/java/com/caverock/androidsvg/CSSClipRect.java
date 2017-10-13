@@ -1,6 +1,6 @@
 package com.caverock.androidsvg;
 
-class CSSClipRect {
+public class CSSClipRect {
     Length top;
     Length right;
     Length bottom;

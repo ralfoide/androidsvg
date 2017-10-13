@@ -1,6 +1,6 @@
 package com.caverock.androidsvg;
 
-enum Unit {
+public enum Unit {
     px,
     em,
     ex,

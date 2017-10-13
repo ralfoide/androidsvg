@@ -1,6 +1,6 @@
-package com.caverock.androidsvg;
+package com.caverock.androidsvg.text;
 
-interface TextChild {
+public interface TextChild {
     void setTextRoot(TextRoot obj);
 
     TextRoot getTextRoot();

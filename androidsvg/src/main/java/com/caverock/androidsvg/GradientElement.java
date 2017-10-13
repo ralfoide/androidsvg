@@ -1,6 +1,7 @@
 package com.caverock.androidsvg;
 
 import android.graphics.Matrix;
+import com.caverock.androidsvg.tag.Stop;
 import org.xml.sax.SAXException;
 
 import java.util.ArrayList;

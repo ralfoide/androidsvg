@@ -17,6 +17,7 @@
 package com.caverock.androidsvg;
 
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -34,11 +35,35 @@ import android.graphics.Typeface;
 import android.util.Base64;
 import android.util.Log;
 
-import com.caverock.androidsvg.Style.FontStyle;
-import com.caverock.androidsvg.Style.RenderQuality;
-import com.caverock.androidsvg.Style.TextAnchor;
-import com.caverock.androidsvg.Style.TextDecoration;
-import com.caverock.androidsvg.Style.VectorEffect;
+import com.caverock.androidsvg.tag.Group;
+import com.caverock.androidsvg.tag.Image;
+import com.caverock.androidsvg.tag.Line;
+import com.caverock.androidsvg.tag.Marker;
+import com.caverock.androidsvg.tag.Mask;
+import com.caverock.androidsvg.tag.Pattern;
+import com.caverock.androidsvg.tag.PolyLine;
+import com.caverock.androidsvg.tag.Polygon;
+import com.caverock.androidsvg.tag.Rect;
+import com.caverock.androidsvg.tag.SolidColor;
+import com.caverock.androidsvg.tag.Stop;
+import com.caverock.androidsvg.tag.Style;
+import com.caverock.androidsvg.tag.Style.FontStyle;
+import com.caverock.androidsvg.tag.Style.RenderQuality;
+import com.caverock.androidsvg.tag.Style.TextAnchor;
+import com.caverock.androidsvg.tag.Style.TextDecoration;
+import com.caverock.androidsvg.tag.Style.VectorEffect;
+import com.caverock.androidsvg.tag.Circle;
+import com.caverock.androidsvg.tag.ClipPath;
+import com.caverock.androidsvg.tag.Ellipse;
+import com.caverock.androidsvg.tag.Switch;
+import com.caverock.androidsvg.tag.Symbol;
+import com.caverock.androidsvg.tag.Use;
+import com.caverock.androidsvg.text.TRef;
+import com.caverock.androidsvg.text.TSpan;
+import com.caverock.androidsvg.text.Text;
+import com.caverock.androidsvg.text.TextContainer;
+import com.caverock.androidsvg.text.TextPath;
+import com.caverock.androidsvg.text.TextSequence;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -90,7 +115,7 @@ class SVGAndroidRenderer
 
    private class RendererState
    {
-      Style    style;
+      Style style;
       boolean  hasFill;
       boolean  hasStroke;
       Paint    fillPaint;
@@ -275,8 +300,8 @@ class SVGAndroidRenderer
          render((Group) obj);
       } else if (obj instanceof Image) {
          render((Image) obj);
-      } else if (obj instanceof com.caverock.androidsvg.Path) {
-         render((com.caverock.androidsvg.Path) obj);
+      } else if (obj instanceof com.caverock.androidsvg.tag.Path) {
+         render((com.caverock.androidsvg.tag.Path) obj);
       } else if (obj instanceof Rect) {
          render((Rect) obj);
       } else if (obj instanceof Circle) {
@@ -655,6 +680,7 @@ class SVGAndroidRenderer
    //==============================================================================
 
 
+   @SuppressLint("WrongConstant")
    private boolean  pushLayer()
    {
       if (!requiresCompositing())
@@ -1018,7 +1044,7 @@ class SVGAndroidRenderer
    //==============================================================================
 
 
-   private void render(com.caverock.androidsvg.Path obj)
+   private void render(com.caverock.androidsvg.tag.Path obj)
    {
       debug("Path render");
 
@@ -1607,7 +1633,7 @@ class SVGAndroidRenderer
          return;
       }
 
-      com.caverock.androidsvg.Path pathObj = (com.caverock.androidsvg.Path) ref;
+      com.caverock.androidsvg.tag.Path pathObj = (com.caverock.androidsvg.tag.Path) ref;
       Path         path = (new PathConverter(pathObj.d)).getPath();
 
       if (pathObj.transform != null)
@@ -1724,7 +1750,7 @@ class SVGAndroidRenderer
                error("TextPath path reference '%s' not found", tpath.href);
                return false;
             }
-            com.caverock.androidsvg.Path pathObj = (com.caverock.androidsvg.Path) ref;
+            com.caverock.androidsvg.tag.Path pathObj = (com.caverock.androidsvg.tag.Path) ref;
             Path      path = (new PathConverter(pathObj.d)).getPath();
             if (pathObj.transform != null)
                path.transform(pathObj.transform);
@@ -2916,8 +2942,8 @@ class SVGAndroidRenderer
       }
 
       List<MarkerVector>  markers;
-      if (obj instanceof com.caverock.androidsvg.Path)
-         markers = (new MarkerPositionCalculator(((com.caverock.androidsvg.Path) obj).d)).getMarkers();
+      if (obj instanceof com.caverock.androidsvg.tag.Path)
+         markers = (new MarkerPositionCalculator(((com.caverock.androidsvg.tag.Path) obj).d)).getMarkers();
       else if (obj instanceof Line)
          markers = calculateMarkerPositions((Line) obj);
       else // PolyLine and Polygon
@@ -3232,7 +3258,7 @@ class SVGAndroidRenderer
       float  lastOffset = -1;
       for (SvgObject child: gradient.children)
       {
-         Stop  stop = (Stop) child;
+         Stop stop = (Stop) child;
          float offset = (stop.offset != null) ? stop.offset : 0f;
          if (i == 0 || offset >= lastOffset) {
             positions[i] = offset;
@@ -3537,7 +3563,7 @@ class SVGAndroidRenderer
          return;
       }
 
-      ClipPath  clipPath = (ClipPath) ref;
+      ClipPath clipPath = (ClipPath) ref;
 
       // An empty clipping path will completely clip away the element (sect 14.3.5).
       if (clipPath.children.isEmpty()) {
@@ -3597,8 +3623,8 @@ class SVGAndroidRenderer
          } else {
             error("<use> elements inside a <clipPath> cannot reference another <use>");
          }
-      } else if (obj instanceof com.caverock.androidsvg.Path) {
-         addObjectToClip((com.caverock.androidsvg.Path) obj, combinedPath, combinedPathMatrix);
+      } else if (obj instanceof com.caverock.androidsvg.tag.Path) {
+         addObjectToClip((com.caverock.androidsvg.tag.Path) obj, combinedPath, combinedPathMatrix);
       } else if (obj instanceof Text) {
          addObjectToClip((Text) obj, combinedPath, combinedPathMatrix);
       } else if (obj instanceof GraphicsElement) {
@@ -3615,6 +3641,7 @@ class SVGAndroidRenderer
    // The clip state push and pop methods only save the matrix.
    // The normal push/pop save the clip region also which would
    // destroy the clip region we are trying to build.
+   @SuppressLint("WrongConstant")
    private void  clipStatePush()
    {
       // Save matrix and clip
@@ -3649,7 +3676,7 @@ class SVGAndroidRenderer
    }
 
 
-   private void addObjectToClip(com.caverock.androidsvg.Path obj, Path combinedPath, Matrix combinedPathMatrix)
+   private void addObjectToClip(com.caverock.androidsvg.tag.Path obj, Path combinedPath, Matrix combinedPathMatrix)
    {
       updateStyleForElement(state, obj);
 

@@ -1,11 +1,13 @@
-package com.caverock.androidsvg;
+package com.caverock.androidsvg.text;
 
-class TextSequence extends SvgObject implements TextChild {
-    String text;
+import com.caverock.androidsvg.SvgObject;
+
+public class TextSequence extends SvgObject implements TextChild {
+    public String text;
 
     private TextRoot textRoot;
 
-    TextSequence(String text) {
+    public TextSequence(String text) {
         this.text = text;
     }
 

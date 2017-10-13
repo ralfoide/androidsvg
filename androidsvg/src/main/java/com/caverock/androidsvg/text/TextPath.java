@@ -1,6 +1,11 @@
-package com.caverock.androidsvg;
+package com.caverock.androidsvg.text;
 
-class TSpan extends TextPositionedContainer implements TextChild {
+import com.caverock.androidsvg.Length;
+
+public class TextPath extends TextContainer implements TextChild {
+    public String href;
+    public Length startOffset;
+
     private TextRoot textRoot;
 
     @Override

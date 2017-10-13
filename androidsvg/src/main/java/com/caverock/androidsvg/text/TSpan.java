@@ -1,8 +1,6 @@
-package com.caverock.androidsvg;
+package com.caverock.androidsvg.text;
 
-class TRef extends TextContainer implements TextChild {
-    String href;
-
+public class TSpan extends TextPositionedContainer implements TextChild {
     private TextRoot textRoot;
 
     @Override

@@ -1,8 +1,10 @@
-package com.caverock.androidsvg;
+package com.caverock.androidsvg.text;
 
+import com.caverock.androidsvg.SvgConditionalContainer;
+import com.caverock.androidsvg.SvgObject;
 import org.xml.sax.SAXException;
 
-class TextContainer extends SvgConditionalContainer {
+public class TextContainer extends SvgConditionalContainer {
     @Override
     public void addChild(SvgObject elem) throws SAXException {
         if (elem instanceof TextChild) {

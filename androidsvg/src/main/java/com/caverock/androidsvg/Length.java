@@ -1,15 +1,15 @@
 package com.caverock.androidsvg;
 
-class Length implements Cloneable {
+public class Length implements Cloneable {
     float value = 0;
     Unit unit = Unit.px;
 
-    Length(float value, Unit unit) {
+    public Length(float value, Unit unit) {
         this.value = value;
         this.unit = unit;
     }
 
-    Length(float value) {
+    public Length(float value) {
         this.value = value;
         this.unit = Unit.px;
     }

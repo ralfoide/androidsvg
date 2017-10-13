@@ -1,5 +1,5 @@
 package com.caverock.androidsvg;
 
 /** What fill or stroke is */
-abstract class SvgPaint implements Cloneable {
+public abstract class SvgPaint implements Cloneable {
 }

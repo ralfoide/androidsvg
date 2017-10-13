@@ -4,7 +4,7 @@ import org.xml.sax.SAXException;
 
 import java.util.List;
 
-interface SvgContainer {
+public interface SvgContainer {
     List<SvgObject> getChildren();
 
     void addChild(SvgObject elem) throws SAXException;

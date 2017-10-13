@@ -1,5 +1,5 @@
 package com.caverock.androidsvg;
 
-class SvgPreserveAspectRatioContainer extends SvgConditionalContainer {
-    PreserveAspectRatio preserveAspectRatio = null;
+public class SvgPreserveAspectRatioContainer extends SvgConditionalContainer {
+    public PreserveAspectRatio preserveAspectRatio = null;
 }
