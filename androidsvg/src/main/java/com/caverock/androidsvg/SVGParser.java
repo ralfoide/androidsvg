@@ -2573,7 +2573,6 @@ class SVGParser extends DefaultHandler2
          if (qname.equals("id") || qname.equals("xml:id"))
          {
             obj.id = attributes.getValue(i).trim();
-            break;
          }
          else if (qname.equals("xml:space")) {
             String  val = attributes.getValue(i).trim();
@@ -2584,7 +2583,6 @@ class SVGParser extends DefaultHandler2
             } else {
                throw new SAXException("Invalid value for \"xml:space\" attribute: "+val);
             }
-            break;
          }
       }
    }
