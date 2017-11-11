@@ -1,4 +1,4 @@
-// This script sets up our pom and artifacts for deployment.
+// This script sets up the androidsvg pom and artifacts for deployment.
 
 apply plugin: 'com.github.dcendents.android-maven'
 
