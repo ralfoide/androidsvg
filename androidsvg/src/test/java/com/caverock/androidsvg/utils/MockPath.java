@@ -16,7 +16,6 @@ public class MockPath {
 
     public void __constructor__() {
         path.clear();
-        ;
     }
 
     @Implementation
