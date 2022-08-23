@@ -1,17 +1,4 @@
-buildscript {
-    repositories {
-        jcenter()
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
-    }
-}
-
-allprojects {
-    repositories {
-        jcenter()
-    }
+plugins {
+    id "com.android.application" version "7.2.1" apply false
+    id "com.android.library" version "7.2.1" apply false
 }
