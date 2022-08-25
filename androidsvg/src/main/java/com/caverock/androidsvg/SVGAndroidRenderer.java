@@ -32,6 +32,7 @@ import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.Shader.TileMode;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.util.Base64;
 import android.util.Log;
 
@@ -97,7 +98,6 @@ class SVGAndroidRenderer
    private Stack<Canvas>  canvasStack;
    private Stack<Bitmap>  bitmapStack;
 
-
    private static final float  BEZIER_ARC_FACTOR = 0.5522847498f;
 
    // The feColorMatrix luminance-to-alpha coefficient. Used for <mask>s.
@@ -108,6 +108,9 @@ class SVGAndroidRenderer
    private static final int  LUMINANCE_TO_ALPHA_BLUE = (int)(0.0721f * (1 << LUMINANCE_FACTOR_SHIFT));
 
    private static final String DEFAULT_FONT_FAMILY = "serif";
+
+   private static final int ANDROID_LEGACY_CANVAS_HAS_ALPHA_LAYER_SAVE_FLAG =  0x04;
+
 
    private static HashSet<String>  supportedFeatures = null;
 
@@ -686,7 +689,9 @@ class SVGAndroidRenderer
          return false;
 
       // Custom version of statePush() that also saves the layer
-      canvas.saveLayerAlpha(null, clamp255(state.style.opacity), Canvas.HAS_ALPHA_LAYER_SAVE_FLAG);
+      // [RM CHANGE] API < 28 was using Canvas.HAS_ALPHA_LAYER_SAVE_FLAG. Deprecated. Using ALL_SAVE_FLAG.
+      int flag = Build.VERSION.SDK_INT < 28 ? ANDROID_LEGACY_CANVAS_HAS_ALPHA_LAYER_SAVE_FLAG : Canvas.ALL_SAVE_FLAG;
+      canvas.saveLayerAlpha(null, clamp255(state.style.opacity), flag);
 
       // Save style state
       stateStack.push(state);
@@ -3644,7 +3649,8 @@ class SVGAndroidRenderer
    private void  clipStatePush()
    {
       // Save matrix and clip
-      canvas.save(Canvas.MATRIX_SAVE_FLAG);
+      // [RM CHANGE] API < 28 was using save(Canvas.MATRIX_SAVE_FLAG. Deprecated.
+      canvas.save();
       // Save style state
       stateStack.push(state);
       state = new RendererState(state);
