@@ -26,7 +26,7 @@ If you have found AndroidSVG useful and are using it in your project, please let
 
 ## Fork Notice & Changes
 
-This repository is a fork from AndroidSVG used in [RTAC](ralf.alfray.com/trains/rtac).
+This repository is a fork from AndroidSVG used in [RTAC](www.alfray.com/trains/rtac).
 
 The original source is available here: https://github.com/BigBadaboom/androidsvg
 
